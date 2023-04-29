@@ -13,7 +13,7 @@ def get_water_level_data():
     conn = mysql.connector.connect(**db_credentials)
     cursor = conn.cursor()
 
-    query = """SELECT sr.device_id, s.drainage_depth - sr.water_level AS drainage_water_level, s.threshold_alert, s.threshold_warning, s.threshold_danger
+    query = """SELECT sr.device_id, s.drainage_depth - sr.water_level AS drainage_water_level, s.threshold_alert, s.threshold_warning, s.threshold_danger, sd.admin_id
                FROM sensor_reading sr
                JOIN sensor_device sd ON sr.device_id = sd.device_id
                JOIN station s ON sd.station_code = s.station_code
@@ -26,6 +26,18 @@ def get_water_level_data():
     conn.close()
 
     return water_level_data
+
+def insert_admin_notification(admin_id, notify_info, device_id):
+    conn = mysql.connector.connect(**db_credentials)
+    cursor = conn.cursor()
+
+    query = """INSERT INTO adminnotification (admin_id, notify_info, noti_time, device_id)
+               VALUES (%s, %s, NOW(), %s)"""
+    cursor.execute(query, (admin_id, notify_info, device_id))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 def process_water_level_data():
     water_level_data = get_water_level_data()
