@@ -1,4 +1,5 @@
 import mysql.connector
+import time
 from fcm_push_notification import send_push_notifications
 
 db_credentials = {
@@ -49,4 +50,6 @@ def process_water_level_data():
             send_push_notifications(title, body)
 
 if __name__ == "__main__":
-    process_water_level_data()
+     while True:
+        process_water_level_data()
+        time.sleep(60)  # Run every 1 minute
