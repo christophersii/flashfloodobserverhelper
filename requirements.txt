@@ -3,3 +3,4 @@ firebase-admin
 APScheduler==3.8.1
 requests==2.26.0
 python-dotenv==0.19.1
+pymysql
