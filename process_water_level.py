@@ -83,17 +83,17 @@ def process_water_level_data():
             title = "Danger: Water level reached threshold"
             body = f"The water level has reached the danger threshold value at device {device_id}. Please take immediate action."
             send_push_notifications(title, body)
-            insert_admin_notification(admin_id, notify_info, device_id)
+            insert_admin_notification(admin_id, body, device_id)
         elif drainage_water_level >= threshold_warning:
             title = "Warning: Water level reached threshold"
             body = f"The water level has reached the warning threshold value at device {device_id}. Please stay alert."
             send_push_notifications(title, body)
-            insert_admin_notification(admin_id, notify_info, device_id)
+            insert_admin_notification(admin_id, body, device_id)
         elif drainage_water_level >= threshold_alert:
             title = "Alert: Water level reached threshold"
             body = f"The water level has reached the alert threshold value at device {device_id}. Please be cautious."
             send_push_notifications(title, body)
-            insert_admin_notification(admin_id, notify_info, device_id)
+            insert_admin_notification(admin_id, body, device_id)
 
 if __name__ == "__main__":
      while True:
