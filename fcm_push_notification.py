@@ -26,7 +26,7 @@ def get_all_device_tokens():
 
 # Send FCM push notification
 def send_fcm_push_notification(tokens, title, body):
-    api_key = "5e2b733e269065bc455341b86032c5d5ccbd87c8"
+    api_key = "AAAAsE70k0U:APA91bFnJpSGW95c1LbH958wipDoPnbXIDms6lcTz3fMLh5zP-sm9fkEaKYrMlFdchb2gRrCSi5kI65u_8_DfX-Jz5Y_Pgd1wLJcpiDNYtwZQl8_Zh93oGVa4wmFkZWStM8qmDzMOAEJ"
     url = "https://fcm.googleapis.com/fcm/send"
     headers = {
         "Content-Type": "application/json",
