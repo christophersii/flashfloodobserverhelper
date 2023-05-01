@@ -1,6 +1,37 @@
-import mysql.connector
-import time
+import os
+import sys
+import subprocess
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+try:
+    import mysql.connector
+except ImportError:
+    install("mysql-connector-python")
+    import mysql.connector
+
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+try:
+    import requests
+except ImportError:
+    install("requests")
+    import requests
+    
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+try:
+    import pymysql
+except ImportError:
+    install("pymysql")
+    import pymysql
+    
 from fcm_push_notification import send_push_notifications
+import time
 
 db_credentials = {
     'user': 'b005c8a97ae61d',
