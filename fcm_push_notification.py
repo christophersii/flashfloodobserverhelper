@@ -26,7 +26,7 @@ def get_all_device_tokens():
 
 # Send FCM push notification
 def send_fcm_push_notification(tokens, title, body):
-    api_key = "edf04d625d90c15be31e42579bff217780cd8b1c"
+    api_key = "5e2b733e269065bc455341b86032c5d5ccbd87c8"
     url = "https://fcm.googleapis.com/fcm/send"
     headers = {
         "Content-Type": "application/json",
@@ -42,6 +42,9 @@ def send_fcm_push_notification(tokens, title, body):
     }
 
     response = requests.post(url, headers=headers, data=json.dumps(payload))
+    
+    print(f"FCM server response status code: {response.status_code}")
+    print(f"FCM server response headers: {response.headers}")
 
     if response.text:  # Check if the response is not empty
         try:
