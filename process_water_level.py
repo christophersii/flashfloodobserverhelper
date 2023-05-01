@@ -73,7 +73,7 @@ def insert_admin_notification(admin_id, notify_info, device_id):
 def process_water_level_data():
     water_level_data = get_water_level_data()
 
-    for device_id, drainage_water_level, threshold_alert, threshold_warning, threshold_danger in water_level_data:
+    for device_id, drainage_water_level, threshold_alert, threshold_warning, threshold_danger, admin_id in water_level_data:
         drainage_water_level = float(drainage_water_level)
         threshold_alert = float(threshold_alert)
         threshold_warning = float(threshold_warning)
