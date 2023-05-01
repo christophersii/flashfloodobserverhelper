@@ -44,7 +44,7 @@ def get_water_level_data():
     conn = mysql.connector.connect(**db_credentials)
     cursor = conn.cursor()
 
-    query = """SELECT sr.device_id, s.drainage_depth - sr.water_level AS drainage_water_level, s.threshold_alert, s.threshold_warning, s.threshold_danger, sd.admin_id
+    query = """SELECT sr.device_id, s.drainage_depth - sr.water_level AS drainage_water_level, s.station_name, s.threshold_alert, s.threshold_warning, s.threshold_danger, sd.admin_id
                FROM sensor_reading sr
                JOIN sensor_device sd ON sr.device_id = sd.device_id
                JOIN station s ON sd.station_code = s.station_code
@@ -73,7 +73,7 @@ def insert_admin_notification(admin_id, notify_info, device_id):
 def process_water_level_data():
     water_level_data = get_water_level_data()
 
-    for device_id, drainage_water_level, threshold_alert, threshold_warning, threshold_danger, admin_id in water_level_data:
+    for device_id, drainage_water_level, station_name, threshold_alert, threshold_warning, threshold_danger, admin_id in water_level_data:
         drainage_water_level = float(drainage_water_level)
         threshold_alert = float(threshold_alert)
         threshold_warning = float(threshold_warning)
@@ -81,7 +81,7 @@ def process_water_level_data():
 
         if drainage_water_level >= threshold_danger:
             title = "Danger: Water level reached threshold"
-            body = f"The water level has reached the danger threshold value at device {device_id}. Please take immediate action."
+            body = f"The water level has reached the danger threshold value at station {station_name}. Please take immediate action."
             send_push_notifications(title, body)
             insert_admin_notification(admin_id, body, device_id)
         elif drainage_water_level >= threshold_warning:
