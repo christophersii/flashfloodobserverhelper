@@ -42,7 +42,16 @@ def send_fcm_push_notification(tokens, title, body):
     }
 
     response = requests.post(url, headers=headers, data=json.dumps(payload))
-    return response.json()
+
+    if response.text:  # Check if the response is not empty
+        try:
+            return response.json()
+        except json.JSONDecodeError as e:
+            print(f"Error decoding JSON response: {e}")
+            return None
+    else:
+        print("Empty response from FCM server")
+        return None
 
 # Main function to send push notifications
 def send_push_notifications(title, body):
@@ -52,7 +61,10 @@ def send_push_notifications(title, body):
         return
 
     response = send_fcm_push_notification(tokens, title, body)
-    print("FCM push notification response:", response)
+    if response:
+        print("FCM push notification response:", response)
+    else:
+        print("Failed to send FCM push notification")
 
 if __name__ == "__main__":
     title = "Test Notification"
