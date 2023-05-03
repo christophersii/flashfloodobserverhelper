@@ -85,7 +85,7 @@ def process_water_level_data():
 
     for device_id, drainage_water_level, station_name, threshold_alert, threshold_warning, threshold_danger, admin_id, reading_time in water_level_data:
         last_processed_time = reading_time
-        reading_time = datetime.strptime(reading_time, '%Y-%m-%d %H:%M:%S') + timedelta(hours=8)
+        reading_time += timedelta(hours=8)
         drainage_water_level = float(drainage_water_level)
         threshold_alert = float(threshold_alert)
         threshold_warning = float(threshold_warning)
