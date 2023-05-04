@@ -86,6 +86,7 @@ def process_water_level_data():
     for device_id, drainage_water_level, station_name, threshold_alert, threshold_warning, threshold_danger, drainage_depth, admin_id, reading_time in water_level_data:
         last_processed_time = reading_time
         reading_time += timedelta(hours=8)
+        device_id = device_id
         drainage_water_level = int(drainage_water_level)
         threshold_alert = int(threshold_alert)
         threshold_warning = int(threshold_warning)
@@ -93,8 +94,8 @@ def process_water_level_data():
         drainage_depth = int(drainage_depth)
 
         if drainage_water_level >= threshold_danger:
-            title = "Danger: Water level reached threshold"
-            body = f"Danger water level: {drainage_water_level}mm/{drainage_depth}mm at station {station_name}."
+            title = "Water level reached threshold"
+            body = f"Level: Danger" + CHAR(13)+CHAR(10) + f"Water level: {drainage_water_level}mm/{drainage_depth}mm" + CHAR(13)+CHAR(10) + f"Station :{station_name}" + CHAR(13)+CHAR(10) + f"Device ID: {device_id}"
             send_push_notifications(title, body)
             insert_admin_notification(admin_id, body, device_id)
         elif drainage_water_level >= threshold_warning:
