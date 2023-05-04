@@ -49,7 +49,7 @@ def get_water_level_data():
     conn = mysql.connector.connect(**db_credentials)
     cursor = conn.cursor()
 
-    query = """SELECT sr.device_id, s.drainage_depth - sr.water_level AS drainage_water_level, s.station_name, s.threshold_alert, s.threshold_warning, s.threshold_danger, sd.admin_id, sr.reading_time
+    query = """SELECT sr.device_id, s.drainage_depth - sr.water_level AS drainage_water_level, s.station_name, s.threshold_alert, s.threshold_warning, s.threshold_danger, s.drainage_depth, sd.admin_id, sr.reading_time
                FROM sensor_reading sr
                JOIN sensor_device sd ON sr.device_id = sd.device_id
                JOIN station s ON sd.station_code = s.station_code
@@ -70,8 +70,8 @@ def insert_admin_notification(admin_id, notify_info, device_id):
     conn = mysql.connector.connect(**db_credentials)
     cursor = conn.cursor()
 
-    query = """INSERT INTO adminnotification (admin_id, notify_info, noti_time, device_id)
-               VALUES (%s, %s, NOW(), %s)"""
+    query = """INSERT INTO adminnotification (admin_id, notify_info, device_id)
+               VALUES (%s, %s, %s)"""
     cursor.execute(query, (admin_id, notify_info, device_id))
 
     conn.commit()
@@ -83,31 +83,32 @@ def process_water_level_data():
     
     water_level_data = get_water_level_data()
 
-    for device_id, drainage_water_level, station_name, threshold_alert, threshold_warning, threshold_danger, admin_id, reading_time in water_level_data:
+    for device_id, drainage_water_level, station_name, threshold_alert, threshold_warning, threshold_danger, drainage_depth, admin_id, reading_time in water_level_data:
         last_processed_time = reading_time
         reading_time += timedelta(hours=8)
         drainage_water_level = float(drainage_water_level)
         threshold_alert = float(threshold_alert)
         threshold_warning = float(threshold_warning)
         threshold_danger = float(threshold_danger)
+        drainage_depth = float(drainage_depth)
 
         if drainage_water_level >= threshold_danger:
             title = "Danger: Water level reached threshold"
-            body = f"The water level has reached the danger threshold value at station {station_name}. Please take immediate action."
+            body = f"Danger water level {drainage_water_level} mm/ {drainage_depth} mm at station {station_name}. Please take immediate action."
             send_push_notifications(title, body)
             insert_admin_notification(admin_id, body, device_id)
         elif drainage_water_level >= threshold_warning:
             title = "Warning: Water level reached threshold"
-            body = f"The water level has reached the warning threshold value at station {station_name}. Please stay alert."
+            body = f"Warning water level {drainage_water_level} mm/ {drainage_depth} mm at station {station_name}. Please stay alert."
             send_push_notifications(title, body)
             insert_admin_notification(admin_id, body, device_id)
         elif drainage_water_level >= threshold_alert:
             title = "Alert: Water level reached threshold"
-            body = f"The water level has reached the alert threshold value at station {station_name}. Please be cautious."
+            body = f"Alert water level {drainage_water_level} mm/ {drainage_depth} mm at station {station_name}. Please be cautious."
             send_push_notifications(title, body)
             insert_admin_notification(admin_id, body, device_id)
 
 if __name__ == "__main__":
      while True:
         process_water_level_data()
-        time.sleep(60)  # Run every 1 minute
+        time.sleep(30)  # Run every 1 minute
