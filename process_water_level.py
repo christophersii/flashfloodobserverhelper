@@ -86,25 +86,25 @@ def process_water_level_data():
     for device_id, drainage_water_level, station_name, threshold_alert, threshold_warning, threshold_danger, drainage_depth, admin_id, reading_time in water_level_data:
         last_processed_time = reading_time
         reading_time += timedelta(hours=8)
-        drainage_water_level = float(drainage_water_level)
-        threshold_alert = float(threshold_alert)
-        threshold_warning = float(threshold_warning)
-        threshold_danger = float(threshold_danger)
-        drainage_depth = float(drainage_depth)
+        drainage_water_level = int(drainage_water_level)
+        threshold_alert = int(threshold_alert)
+        threshold_warning = int(threshold_warning)
+        threshold_danger = int(threshold_danger)
+        drainage_depth = int(drainage_depth)
 
         if drainage_water_level >= threshold_danger:
             title = "Danger: Water level reached threshold"
-            body = f"Danger water level {drainage_water_level} mm/ {drainage_depth} mm at station {station_name}. Please take immediate action."
+            body = f"Danger water level: {drainage_water_level}mm/{drainage_depth}mm at station {station_name}."
             send_push_notifications(title, body)
             insert_admin_notification(admin_id, body, device_id)
         elif drainage_water_level >= threshold_warning:
             title = "Warning: Water level reached threshold"
-            body = f"Warning water level {drainage_water_level} mm/ {drainage_depth} mm at station {station_name}. Please stay alert."
+            body = f"Warning water level: {drainage_water_level}mm/{drainage_depth}mm at station {station_name}."
             send_push_notifications(title, body)
             insert_admin_notification(admin_id, body, device_id)
         elif drainage_water_level >= threshold_alert:
             title = "Alert: Water level reached threshold"
-            body = f"Alert water level {drainage_water_level} mm/ {drainage_depth} mm at station {station_name}. Please be cautious."
+            body = f"Alert water level: {drainage_water_level}mm/{drainage_depth}mm at station {station_name}."
             send_push_notifications(title, body)
             insert_admin_notification(admin_id, body, device_id)
 
