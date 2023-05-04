@@ -94,17 +94,17 @@ def process_water_level_data():
 
         if drainage_water_level >= threshold_danger:
             title = "Water level reached threshold"
-            body = f"Level             : Danger\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation         : {station_name}\nDevice ID    : {device_id}\nRead time    : {reading_time}"
+            body = f"Level             : Danger\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation         : {station_name}\nDevice ID    : {device_id}\nRead time   : {reading_time}"
             send_push_notifications(title, body)
             insert_admin_notification(admin_id, body, device_id)
         elif drainage_water_level >= threshold_warning:
             title = "Warning: Water level reached threshold"
-            body = f"Level             : Warning\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation         : {station_name}\nDevice ID    : {device_id}\nRead time    : {reading_time}"
+            body = f"Level             : Warning\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation         : {station_name}\nDevice ID    : {device_id}\nRead time   : {reading_time}"
             send_push_notifications(title, body)
             insert_admin_notification(admin_id, body, device_id)
         elif drainage_water_level >= threshold_alert:
             title = "Alert: Water level reached threshold"
-            body = f"Level             : Danger\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation         : {station_name}\nDevice ID    : {device_id}\nRead time    : {reading_time}"
+            body = f"Level             : Danger\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation         : {station_name}\nDevice ID    : {device_id}\nRead time   : {reading_time}"
             send_push_notifications(title, body)
             insert_admin_notification(admin_id, body, device_id)
 
