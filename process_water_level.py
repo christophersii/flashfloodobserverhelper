@@ -95,7 +95,7 @@ def process_water_level_data():
 
         if drainage_water_level >= threshold_danger:
             title = "Water level reached threshold"
-            body = f"Level           : Danger\nWater level: {drainage_water_level}mm/{drainage_depth}mm\nStation        :{station_name}\nDevice ID   : {device_id}"
+            body = f"Level             : Danger\nWater level: {drainage_water_level}mm/{drainage_depth}mm\nStation         :{station_name}\nDevice ID    : {device_id}"
             send_push_notifications(title, body)
             insert_admin_notification(admin_id, body, device_id)
         elif drainage_water_level >= threshold_warning:
