@@ -66,35 +66,35 @@ def send_push_notifications(title, body):
     response = send_fcm_push_notification(tokens, title, body)
     if response:
         print("FCM push notification response:", response)
-        handle_fcm_response(response, tokens)
+        #handle_fcm_response(response, tokens)
     else:
         print("Failed to send FCM push notification")
 
 
-def handle_fcm_response(response, tokens):
-    results = response.get('results', [])
-    tokens_to_remove = []
+#def handle_fcm_response(response, tokens):
+#    results = response.get('results', [])
+#    tokens_to_remove = []
 
-    for index, result in enumerate(results):
-        if 'error' in result and result['error'] == 'NotRegistered':
-            tokens_to_remove.append(tokens[index])
+#    for index, result in enumerate(results):
+#        if 'error' in result and result['error'] == 'NotRegistered':
+#            tokens_to_remove.append(tokens[index])
 
-    if tokens_to_remove:
-        remove_tokens_from_database(tokens_to_remove)
+#    if tokens_to_remove:
+#        remove_tokens_from_database(tokens_to_remove)
 
 
-def remove_tokens_from_database(tokens):
-    connection = get_database_connection()
-    cursor = connection.cursor()
+#def remove_tokens_from_database(tokens):
+#    connection = get_database_connection()
+#    cursor = connection.cursor()
 
-    for token in tokens:
-        query = f"DELETE FROM fcm_tokens WHERE token = %s"
-        cursor.execute(query, token)
+#    for token in tokens:
+#        query = f"DELETE FROM fcm_tokens WHERE token = %s"
+#        cursor.execute(query, token)
 
-    connection.commit()
-    cursor.close()
-    connection.close()
-    print(f"Removed {len(tokens)} NotRegistered tokens from the database")
+#    connection.commit()
+#    cursor.close()
+#    connection.close()
+#    print(f"Removed {len(tokens)} NotRegistered tokens from the database")
 
 if __name__ == "__main__":
     title = "Test Notification"
