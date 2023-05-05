@@ -11,6 +11,9 @@ def get_database_connection():
         password="04eca8ce",
         db="heroku_3442ee38bf9fb24"
     )
+    cursor = connection.cursor()
+    cursor.execute("SET time_zone = '+08:00'")
+    cursor.close()
     return connection
 
 # Fetch all tokens from the database
