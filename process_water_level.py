@@ -112,7 +112,8 @@ def process_water_level_data():
 
 if __name__ == "__main__":
      while True:
-        process_water_level_data()
+        try:
+            process_water_level_data()
         except Exception as e:
             print(f"Error: {e}")
         time.sleep(30)  # Run every 1 minute
