@@ -20,7 +20,7 @@ def get_database_connection():
 def get_all_device_tokens():
     connection = get_database_connection()
     cursor = connection.cursor(pymysql.cursors.DictCursor)
-    query = "SELECT token FROM fcm_tokens WHERE admin_id = %s"
+    query = "SELECT token FROM fcm_tokens"
     cursor.execute(query)
     tokens = cursor.fetchall()
     cursor.close()
@@ -29,6 +29,8 @@ def get_all_device_tokens():
 
 # Send FCM push notification
 def send_fcm_push_notification(tokens, title, body):
+    fcm_tokens = get_fcm_tokens_for_admin(admin_id)
+    
     api_key = "AAAAsE70k0U:APA91bFnJpSGW95c1LbH958wipDoPnbXIDms6lcTz3fMLh5zP-sm9fkEaKYrMlFdchb2gRrCSi5kI65u_8_DfX-Jz5Y_Pgd1wLJcpiDNYtwZQl8_Zh93oGVa4wmFkZWStM8qmDzMOAEJ"
     url = "https://fcm.googleapis.com/fcm/send"
     headers = {
