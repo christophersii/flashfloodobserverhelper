@@ -2,6 +2,7 @@ import os
 import sys
 import subprocess
 from datetime import datetime, timedelta
+import json
 
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
@@ -12,25 +13,18 @@ except ImportError:
     install("mysql-connector-python")
     import mysql.connector
 
-
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
 try:
     import requests
 except ImportError:
     install("requests")
     import requests
-    
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
 try:
     import pymysql
 except ImportError:
     install("pymysql")
     import pymysql
-    
+
 from fcm_push_notification import send_push_notifications
 import time
 
@@ -45,10 +39,10 @@ last_processed_time = None
 
 def get_water_level_data():
     global last_processed_time
-    
+
     conn = mysql.connector.connect(**db_credentials)
     cursor = conn.cursor()
-    
+
     cursor.execute("SET time_zone = '+08:00'")
 
     query = """SELECT sr.device_id, s.drainage_depth - sr.water_level AS drainage_water_level, s.station_name, s.threshold_alert, s.threshold_warning, s.threshold_danger, s.drainage_depth, sd.admin_id, sr.reading_time
@@ -59,7 +53,7 @@ def get_water_level_data():
 
     if last_processed_time is not None:
         query += f" AND sr.reading_time > '{last_processed_time}'"
-    
+
     cursor.execute(query)
     water_level_data = cursor.fetchall()
 
@@ -74,7 +68,7 @@ def insert_admin_notification(admin_id, notify_info, device_id):
 
     query = """INSERT INTO adminnotification (admin_id, notify_info, device_id)
                VALUES (%s, %s, %s)"""
-    cursor.execute(query, (admin_id, notify_info, device_id))
+    cursor.execute(query, (admin_id, json.dumps(notify_info), device_id))
 
     conn.commit()
     cursor.close()
@@ -82,7 +76,7 @@ def insert_admin_notification(admin_id, notify_info, device_id):
 
 def process_water_level_data():
     global last_processed_time
-    
+
     water_level_data = get_water_level_data()
 
     for device_id, drainage_water_level, station_name, threshold_alert, threshold_warning, threshold_danger, drainage_depth, admin_id, reading_time in water_level_data:
@@ -99,20 +93,44 @@ def process_water_level_data():
             title = "Water level reached threshold"
             body = f"Level             : Danger\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation         : {station_name}\nDevice ID    : {device_id}\nTime             : {formatted_reading_time}"
             send_push_notifications(admin_id, title, body)
-            insert_admin_notification(admin_id, body, device_id)
+            notification_data = {
+                'level': 'Danger',
+                'reading_time': formatted_reading_time,
+                'station_name': station_name,
+                'device_id': device_id,
+                'drainage_water_level': drainage_water_level,
+                'drainage_depth': drainage_depth
+            }
+            insert_admin_notification(admin_id, notification_data, device_id)
         elif drainage_water_level >= threshold_warning:
             title = "Warning: Water level reached threshold"
             body = f"Level             : Warning\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation         : {station_name}\nDevice ID    : {device_id}\nTime             : {formatted_reading_time}"
             send_push_notifications(admin_id, title, body)
-            insert_admin_notification(admin_id, body, device_id)
+            notification_data = {
+                'level': 'Warning',
+                'reading_time': formatted_reading_time,
+                'station_name': station_name,
+                'device_id': device_id,
+                'drainage_water_level': drainage_water_level,
+                'drainage_depth': drainage_depth
+            }
+            insert_admin_notification(admin_id, notification_data, device_id)
         elif drainage_water_level >= threshold_alert:
             title = "Alert: Water level reached threshold"
-            body = f"Level             : Danger\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation         : {station_name}\nDevice ID    : {device_id}\nTime             : {formatted_reading_time}"
+            body = f"Level             : Alert\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation         : {station_name}\nDevice ID    : {device_id}\nTime             : {formatted_reading_time}"
             send_push_notifications(admin_id, title, body)
-            insert_admin_notification(admin_id, body, device_id)
+            notification_data = {
+                'level': 'Alert',
+                'reading_time': formatted_reading_time,
+                'station_name': station_name,
+                'device_id': device_id,
+                'drainage_water_level': drainage_water_level,
+                'drainage_depth': drainage_depth
+            }
+            insert_admin_notification(admin_id, notification_data, device_id)
 
 if __name__ == "__main__":
-     while True:
+    while True:
         try:
             process_water_level_data()
         except Exception as e:
