@@ -93,6 +93,7 @@ def process_water_level_data():
             body = f"Level: Danger\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation: {station_name}\nDevice ID: {device_id}\nTime: {reading_time}"
             send_push_notifications(admin_id, title, body)
             notification_data = {
+                'level_title': 'PLEASE TAKE IMMEDIATE ACTION',
                 'level': 'Danger',
                 'reading_time': formatted_reading_time,
                 'station_name': station_name,
@@ -106,6 +107,7 @@ def process_water_level_data():
             body = f"Level: Warning\nWater level: {drainage_water_level}/{drainage_depth}mm\nStation: {station_name}\nDevice ID: {device_id}\nTime: {reading_time}"
             send_push_notifications(admin_id, title, body)
             notification_data = {
+                'level_title': 'PLEASE BE PREPARED',
                 'level': 'Warning',
                 'reading_time': formatted_reading_time,
                 'station_name': station_name,
@@ -119,6 +121,7 @@ def process_water_level_data():
             body = f"Level: Alert\nWater level: {drainage_water_level}/{drainage_depth}mm\nStation: {station_name}\nDevice ID: {device_id}\nTime: {reading_time}"
             send_push_notifications(admin_id, title, body)
             notification_data = {
+                'level_title': 'PLEASE STAY ALERT',
                 'level': 'Alert',
                 'reading_time': formatted_reading_time,
                 'station_name': station_name,
