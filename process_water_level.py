@@ -89,8 +89,8 @@ def process_water_level_data():
         drainage_depth = int(drainage_depth)
 
         if drainage_water_level >= threshold_danger:
-            title = "Water level reached threshold"
-            body = f"Level             : Danger\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation         : {station_name}\nDevice ID    : {device_id}\nTime             : {formatted_reading_time}"
+            title = "PLEASE TAKE IMMEDIATE ACTION"
+            body = f"Level: Danger\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation: {station_name}\nDevice ID: {device_id}\nTime: {reading_time}"
             send_push_notifications(admin_id, title, body)
             notification_data = {
                 'level': 'Danger',
@@ -102,8 +102,8 @@ def process_water_level_data():
             }
             insert_admin_notification(admin_id, notification_data, device_id)
         elif drainage_water_level >= threshold_warning:
-            title = "Warning: Water level reached threshold"
-            body = f"Level             : Warning\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation         : {station_name}\nDevice ID    : {device_id}\nTime             : {formatted_reading_time}"
+            title = "PLEASE BE PREPARED"
+            body = f"Level: Warning\nWater level: {drainage_water_level}/{drainage_depth}mm\nStation: {station_name}\nDevice ID: {device_id}\nTime: {reading_time}"
             send_push_notifications(admin_id, title, body)
             notification_data = {
                 'level': 'Warning',
@@ -115,8 +115,8 @@ def process_water_level_data():
             }
             insert_admin_notification(admin_id, notification_data, device_id)
         elif drainage_water_level >= threshold_alert:
-            title = "Alert: Water level reached threshold"
-            body = f"Level             : Alert\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation         : {station_name}\nDevice ID    : {device_id}\nTime             : {formatted_reading_time}"
+            title = "PLEASE STAY ALERT"
+            body = f"Level: Alert\nWater level: {drainage_water_level}/{drainage_depth}mm\nStation: {station_name}\nDevice ID: {device_id}\nTime: {reading_time}"
             send_push_notifications(admin_id, title, body)
             notification_data = {
                 'level': 'Alert',
