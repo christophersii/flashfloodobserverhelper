@@ -17,7 +17,7 @@ def get_database_connection():
     return connection
 
 # Fetch all tokens from the database
-def get_all_device_tokens(admin_id):
+def get_fcm_tokens_for_admin(admin_id):
     connection = get_database_connection()
     cursor = connection.cursor(pymysql.cursors.DictCursor)
     query = "SELECT token FROM fcm_tokens WHERE admin_id = %s"
@@ -61,7 +61,7 @@ def send_fcm_push_notification(tokens, title, body):
 
 # Main function to send push notifications
 def send_push_notifications(title, body):
-    tokens = get_all_device_tokens(admin_id)
+    tokens = get_fcm_tokens_for_admin()
     if not tokens:
         print("No device tokens found")
         return
