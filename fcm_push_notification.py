@@ -17,7 +17,7 @@ def get_database_connection():
     return connection
 
 # Fetch all tokens from the database
-def get_all_device_tokens():
+def get_all_device_tokens(admin_id):
     connection = get_database_connection()
     cursor = connection.cursor(pymysql.cursors.DictCursor)
     query = "SELECT token FROM fcm_tokens WHERE admin_id = %s"
