@@ -75,4 +75,4 @@ def send_push_notifications(admin_id, title, body):
 if __name__ == "__main__":
     title = "Test Notification"
     body = "This is a test notification from FCM."
-    send_push_notifications(title, body)
+    send_push_notifications(admin_id, title, body)
