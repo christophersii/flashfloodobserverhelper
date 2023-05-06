@@ -61,7 +61,7 @@ def send_fcm_push_notification(tokens, title, body):
 
 # Main function to send push notifications
 def send_push_notifications(title, body):
-    tokens = get_all_device_tokens()
+    tokens = get_all_device_tokens(admin_id)
     if not tokens:
         print("No device tokens found")
         return
