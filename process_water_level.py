@@ -95,7 +95,7 @@ def process_water_level_data():
             notification_data = {
                 'level_title': 'PLEASE TAKE IMMEDIATE ACTION',
                 'level': 'Danger',
-                'reading_time': reading_time.strftime('%Y-%m-%d %H:%M:%S'),,
+                'reading_time': reading_time.strftime('%Y-%m-%d %H:%M:%S'),
                 'station_name': station_name,
                 'device_id': device_id,
                 'drainage_water_level': drainage_water_level,
@@ -109,7 +109,7 @@ def process_water_level_data():
             notification_data = {
                 'level_title': 'PLEASE BE PREPARED',
                 'level': 'Warning',
-                'reading_time': reading_time.strftime('%Y-%m-%d %H:%M:%S'),,
+                'reading_time': reading_time.strftime('%Y-%m-%d %H:%M:%S'),
                 'station_name': station_name,
                 'device_id': device_id,
                 'drainage_water_level': drainage_water_level,
@@ -123,7 +123,7 @@ def process_water_level_data():
             notification_data = {
                 'level_title': 'PLEASE STAY ALERT',
                 'level': 'Alert',
-                'reading_time': reading_time.strftime('%Y-%m-%d %H:%M:%S'),,
+                'reading_time': reading_time.strftime('%Y-%m-%d %H:%M:%S'),
                 'station_name': station_name,
                 'device_id': device_id,
                 'drainage_water_level': drainage_water_level,
