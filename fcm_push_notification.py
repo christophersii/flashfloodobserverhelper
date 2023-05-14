@@ -32,7 +32,7 @@ def remove_token(token):
     # Your PHP script URL
     url = "http://flashfloodobserver.herokuapp.com/remove_token.php"
     data = {
-        'tokens': [token]
+        'tokens': ','.join(token)
     }
 
     # Send the POST request.
