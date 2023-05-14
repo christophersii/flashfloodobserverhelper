@@ -99,7 +99,7 @@ def process_water_level_data():
 
     water_level_data = get_water_level_data()
 
-    for device_id, drainage_water_level, station_name, threshold_alert, threshold_warning, threshold_danger, drainage_depth, admin_id, reading_time in water_level_data:
+    for device_id, drainage_water_level, station_name, threshold_alert, threshold_warning, threshold_danger, drainage_depth, admin_id, reading_time, admin_phone in water_level_data:
         last_processed_time = reading_time
         device_id = device_id
         drainage_water_level = int(drainage_water_level)
