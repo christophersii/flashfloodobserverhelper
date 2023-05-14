@@ -87,7 +87,7 @@ def send_sms(admin_phone, message):
     client = nexmo.Client(key='6ef9f7e8', secret='V5eErgcm5D72mt0U')
     response = client.send_message({
         'from': 'FFObserver',
-        'to': '60' + str(admin_phone),
+        'to': '60196386769',
         'text': message,
     })
 
