@@ -24,6 +24,12 @@ try:
 except ImportError:
     install("pymysql")
     import pymysql
+    
+try:
+    import nexmo
+except ImportError:
+    install("nexmo")
+    import nexmo
 
 from fcm_push_notification import send_push_notifications
 import time
@@ -45,10 +51,13 @@ def get_water_level_data():
 
     cursor.execute("SET time_zone = '+08:00'")
 
-    query = """SELECT sr.device_id, s.drainage_depth - sr.water_level AS drainage_water_level, s.station_name, s.threshold_alert, s.threshold_warning, s.threshold_danger, s.drainage_depth, sd.admin_id, sr.reading_time
+    query = """SELECT sr.device_id, s.drainage_depth - sr.water_level AS drainage_water_level, s.station_name, 
+               s.threshold_alert, s.threshold_warning, s.threshold_danger, s.drainage_depth, 
+               sd.admin_id, sr.reading_time, a.admin_phone
                FROM sensor_reading sr
                JOIN sensor_device sd ON sr.device_id = sd.device_id
                JOIN station s ON sd.station_code = s.station_code
+               JOIN admin a ON sd.admin_id = a.admin_id
                WHERE sr.reading_time = (SELECT MAX(reading_time) FROM sensor_reading WHERE device_id = sr.device_id)"""
 
     if last_processed_time is not None:
@@ -74,6 +83,17 @@ def insert_admin_notification(admin_id, notify_info, device_id):
     cursor.close()
     conn.close()
 
+def send_sms(admin_phone, message):
+    client = nexmo.Client(key='your_nexmo_key', secret='your_nexmo_secret')
+    response = client.send_message({
+        'from': 'FFObserver',
+        'to': '60' + str(admin_phone),
+        'text': message,
+    })
+
+    if response["messages"][0]["status"] != "0":
+        print(f"Message failed with error: {response['messages'][0]['error-text']}")
+    
 def process_water_level_data():
     global last_processed_time
 
@@ -92,6 +112,7 @@ def process_water_level_data():
             title = "PLEASE TAKE IMMEDIATE ACTION"
             body = f"Level: Danger\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation: {station_name}\nDevice ID: {device_id}\nTime: {reading_time}"
             send_push_notifications(admin_id, title, body)
+            send_sms(admin_phone, body)
             notification_data = {
                 'level_title': 'PLEASE TAKE IMMEDIATE ACTION',
                 'level': 'Danger',
@@ -106,6 +127,7 @@ def process_water_level_data():
             title = "PLEASE BE PREPARED"
             body = f"Level: Warning\nWater level: {drainage_water_level}/{drainage_depth}mm\nStation: {station_name}\nDevice ID: {device_id}\nTime: {reading_time}"
             send_push_notifications(admin_id, title, body)
+            send_sms(admin_phone, body)
             notification_data = {
                 'level_title': 'PLEASE BE PREPARED',
                 'level': 'Warning',
@@ -120,6 +142,7 @@ def process_water_level_data():
             title = "PLEASE STAY ALERT"
             body = f"Level: Alert\nWater level: {drainage_water_level}/{drainage_depth}mm\nStation: {station_name}\nDevice ID: {device_id}\nTime: {reading_time}"
             send_push_notifications(admin_id, title, body)
+            send_sms(admin_phone, body)
             notification_data = {
                 'level_title': 'PLEASE STAY ALERT',
                 'level': 'Alert',
