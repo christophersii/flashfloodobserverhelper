@@ -27,6 +27,20 @@ def get_fcm_tokens_for_admin(admin_id):
     connection.close()
     return [token["token"] for token in tokens]
 
+# Remove token from the database
+def remove_token(token):
+    # Your PHP script URL
+    url = "http://flashfloodobserver.herokuapp.com/remove_token.php"
+    data = {
+        'tokens': [token]
+    }
+
+    # Send the POST request.
+    response = requests.post(url, data=data)
+
+    # Print the response from your PHP script.
+    print(response.text)
+
 # Send FCM push notification
 def send_fcm_push_notification(tokens, title, body):
     api_key = "AAAAsE70k0U:APA91bFnJpSGW95c1LbH958wipDoPnbXIDms6lcTz3fMLh5zP-sm9fkEaKYrMlFdchb2gRrCSi5kI65u_8_DfX-Jz5Y_Pgd1wLJcpiDNYtwZQl8_Zh93oGVa4wmFkZWStM8qmDzMOAEJ"
@@ -51,7 +65,12 @@ def send_fcm_push_notification(tokens, title, body):
 
     if response.text:  # Check if the response is not empty
         try:
-            return response.json()
+            response_json = response.json()
+            if 'failure' in response_json and response_json['failure'] > 0:
+                for result_index, result_item in enumerate(response_json['results']):
+                    if 'error' in result_item and result_item['error'] == 'NotRegistered':
+                        remove_token(tokens[result_index])
+            return response_json
         except json.JSONDecodeError as e:
             print(f"Error decoding JSON response: {e}")
             return None
