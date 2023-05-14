@@ -87,7 +87,7 @@ def send_sms(admin_phone, message):
     client = nexmo.Client(key='6ef9f7e8', secret='V5eErgcm5D72mt0U')
     response = client.send_message({
         'from': 'FFObserver',
-        'to': '60196386769',
+        'to': '60' + str(admin_phone),
         'text': message,
     })
 
@@ -107,6 +107,11 @@ def process_water_level_data():
         threshold_warning = int(threshold_warning)
         threshold_danger = int(threshold_danger)
         drainage_depth = int(drainage_depth)
+        
+        print(f"Admin phone number: {admin_phone}")
+        print(f"Admin phone number in database: {admin_phone}")
+        admin_phone_str = str(admin_phone)
+        print(f"Admin phone number after conversion to string: 60{admin_phone_str}")
 
         if drainage_water_level >= threshold_danger:
             title = "PLEASE TAKE IMMEDIATE ACTION"
