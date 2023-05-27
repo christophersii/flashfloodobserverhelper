@@ -117,7 +117,7 @@ def process_water_level_data():
             title = "PLEASE TAKE IMMEDIATE ACTION"
             body = f"Level: Danger\nWater level : {drainage_water_level}/{drainage_depth}mm\nStation: {station_name}\nDevice ID: {device_id}\nTime: {reading_time}"
             send_push_notifications(admin_id, title, body)
-            send_sms(admin_phone, body)
+            #send_sms(admin_phone, body)
             notification_data = {
                 'level_title': 'PLEASE TAKE IMMEDIATE ACTION',
                 'level': 'Danger',
@@ -132,7 +132,7 @@ def process_water_level_data():
             title = "PLEASE BE PREPARED"
             body = f"Level: Warning\nWater level: {drainage_water_level}/{drainage_depth}mm\nStation: {station_name}\nDevice ID: {device_id}\nTime: {reading_time}"
             send_push_notifications(admin_id, title, body)
-            send_sms(admin_phone, body)
+            #send_sms(admin_phone, body)
             notification_data = {
                 'level_title': 'PLEASE BE PREPARED',
                 'level': 'Warning',
@@ -147,7 +147,7 @@ def process_water_level_data():
             title = "PLEASE STAY ALERT"
             body = f"Level: Alert\nWater level: {drainage_water_level}/{drainage_depth}mm\nStation: {station_name}\nDevice ID: {device_id}\nTime: {reading_time}"
             send_push_notifications(admin_id, title, body)
-            send_sms(admin_phone, body)
+            #send_sms(admin_phone, body)
             notification_data = {
                 'level_title': 'PLEASE STAY ALERT',
                 'level': 'Alert',
