@@ -51,7 +51,7 @@ def get_water_level_data():
 
     cursor.execute("SET time_zone = '+08:00'")
 
-    query = """SELECT sr.device_id, s.drainage_depth - sr.water_level AS drainage_water_level, s.station_name, 
+    query = """SELECT sr.device_id, s.drainage_depth - (sr.water_level - 30) AS drainage_water_level, s.station_name, 
                s.threshold_alert, s.threshold_warning, s.threshold_danger, s.drainage_depth, 
                sd.admin_id, sr.reading_time, a.admin_phone
                FROM sensor_reading sr
